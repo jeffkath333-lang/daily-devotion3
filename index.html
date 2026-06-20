@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head><link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B111E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('PWA Service Worker Registered!'))
+        .catch(err => console.error('Service Worker registration failed', err));
+    });
+  }
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Devotion by Jeff Tony</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for beautiful icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Cinzel', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        gold: {
+                            50: '#fbf8eb',
+                            100: '#f5eecb',
+                            200: '#ebd996',
+                            300: '#dfbe5b',
+                            400: '#d5a431',
+                            500: '#b98725',
+                            600: '#94631b',
+                            700: '#704418',
+                            800: '#523015',
+                            900: '#351d0e',
+                        },
+                        spiritual: {
+                            deep: '#0B111E',
+                            card: '#161F30',
+                            accent: '#F3AF3D',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0B111E;
+            color: #E2E8F0;
+        }
+        .header-title {
+            font-family: 'Cinzel', serif;
+        }
+        .glow-effect {
+            box-shadow: 0 0 25px rgba(243, 175, 61, 0.15);
+        }
+        .gradient-border {
+            background: linear-gradient(to right, #b98725, #dfbe5b, #b98725);
+            height: 2px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-gold-500 selection:text-spiritual-deep">
+
+    <!-- Garisan Hiasan Atas -->
+    <div class="gradient-border"></div>
+
+    <!-- Navigasi / Pengepala -->
+    <header class="border-b border-gray-800 bg-spiritual-deep/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+            <!-- Logo Alkitabiah & Nama Brand -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-gold-600 to-gold-400 rounded-xl flex items-center justify-center text-spiritual-deep shadow-md">
+                    <!-- Logo Vektor Salib, Kitab Terbuka & Burung Merpati -->
+                    <svg class="w-6 h-6 text-spiritual-deep" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2a1 1 0 0 0-1 1v4.382l-3.447 1.724A1 1 0 0 0 7 10v2a1 1 0 0 0 .553.894L11 14.618V21a1 1 0 0 0 2 0v-6.382l3.447-1.724A1 1 0 0 0 17 12v-2a1 1 0 0 0-.553-.894L13 7.382V3a1 1 0 0 0-1-1zm-3.5 9h7v1h-7v-1z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="header-title text-lg font-bold text-gold-300 tracking-wide uppercase leading-tight">Daily Devotion</h1>
+                    <p class="text-xs text-gray-400">by Jeff Tony</p>
+                </div>
+            </div>
+
+            <!-- Butang Muat Turun untuk Krew -->
+            <button onclick="downloadSelf()" class="flex items-center gap-2 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-spiritual-deep font-bold py-1.5 px-3.5 rounded-lg text-xs transition duration-300 ease-in-out shadow-lg hover:scale-105 active:scale-95">
+                <i class="fa-solid fa-cloud-arrow-down"></i>
+                <span class="hidden sm:inline">Muat Turun HTML</span>
+                <span class="sm:hidden">Simpan</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Kandungan Utama -->
+    <main class="flex-grow max-w-3xl mx-auto px-4 py-8 w-full">
+        
+        <!-- Banner Selamat Datang & Paparan Tarikh -->
+        <div class="text-center mb-10">
+            <span class="inline-block px-3 py-1 bg-gold-500/10 border border-gold-500/30 text-gold-400 rounded-full text-xs font-semibold tracking-wider uppercase mb-3">
+                <i class="fa-regular fa-calendar-days mr-1.5"></i> Firman Segar Hari Ini
+            </span>
+            <h2 id="devotion-date" class="text-2xl font-extrabold text-white md:text-4xl tracking-tight">
+                --
+            </h2>
+            <div class="w-16 h-1 bg-gold-500 mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        <!-- Kad Kandungan Renungan -->
+        <div class="bg-spiritual-card border border-gray-800/80 rounded-2xl p-6 md:p-8 shadow-2xl glow-effect space-y-8 relative overflow-hidden">
+            <!-- Cahaya Keemasan Halus di belakang kad -->
+            <div class="absolute -top-12 -right-12 w-40 h-40 bg-gold-500/5 rounded-full blur-2xl"></div>
+            
+            <!-- Seksyen 1: Firman Tuhan (AVB) -->
+            <div class="relative z-10 space-y-3">
+                <div class="flex items-center gap-2 text-gold-400 text-xs font-bold tracking-wider uppercase">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Nas Alkitab (Versi Borneo)</span>
+                </div>
+                <blockquote class="text-lg md:text-2xl font-serif text-white italic border-l-4 border-gold-500 pl-4 py-1 leading-relaxed">
+                    "<span id="verse-text">--</span>"
+                </blockquote>
+                <p id="verse-citation" class="text-right text-gold-400 font-semibold text-sm md:text-base italic">
+                    --
+                </p>
+            </div>
+
+            <!-- Pembahagi Hiasan -->
+            <div class="flex items-center justify-center gap-4 text-gray-700">
+                <div class="h-px bg-gray-800 flex-grow"></div>
+                <i class="fa-solid fa-dove text-gold-500/50"></i>
+                <div class="h-px bg-gray-800 flex-grow"></div>
+            </div>
+
+            <!-- Seksyen 2: Bisikan Suara Bapa (Secara Peribadi) -->
+            <div class="space-y-3">
+                <div class="flex items-center gap-2 text-gold-400 text-xs font-bold tracking-wider uppercase">
+                    <i class="fa-solid fa-comment-dots"></i>
+                    <span>Dengarlah Suara Bapa Kepadamu</span>
+                </div>
+                <div class="bg-gold-500/5 border border-gold-500/10 rounded-xl p-5 md:p-6">
+                    <p id="personal-voice" class="text-gray-200 leading-relaxed text-base md:text-lg italic font-medium">
+                        --
+                    </p>
+                </div>
+            </div>
+
+            <!-- Seksyen 3: Penjelasan Konteks & Impak -->
+            <div class="space-y-3">
+                <div class="flex items-center gap-2 text-gold-400 text-xs font-bold tracking-wider uppercase">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+                    <span>Konteks & Aplikasi Praktikal</span>
+                </div>
+                <p id="context-impact" class="text-gray-300 leading-relaxed text-sm md:text-base">
+                    --
+                </p>
+            </div>
+
+            <!-- Seksyen 4: Doa Hari Ini -->
+            <div class="space-y-3">
+                <div class="flex items-center gap-2 text-gold-400 text-xs font-bold tracking-wider uppercase">
+                    <i class="fa-solid fa-hands-praying"></i>
+                    <span>Doa Peribadi Hari Ini</span>
+                </div>
+                <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-5 md:p-6 space-y-3">
+                    <p id="daily-prayer" class="text-gray-300 italic leading-relaxed text-sm md:text-base">
+                        --
+                    </p>
+                    <p class="text-right text-gold-400 font-semibold text-sm">
+                        Dalam nama Yesus, Amen.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Seksyen 5: Penghantaran Amen (Kolum Interaksi) -->
+            <div class="border-t border-gray-800/80 pt-8 mt-6">
+                <div class="bg-gradient-to-br from-spiritual-deep to-gray-900 border border-gold-500/30 rounded-xl p-6 text-center space-y-4">
+                    <h3 class="header-title text-lg font-bold text-gold-300">Sampaikan "Amen" Anda Kepada Jeff Tony</h3>
+                    <p class="text-gray-400 text-xs md:text-sm max-w-md mx-auto">
+                        Jika firman dan renungan hari ini meneguhkan iman anda, klik butang di bawah untuk memeterai janji-Nya di dalam roh anda dan hantarkan "Amen" terus kepada Jeff Tony.
+                    </p>
+                    
+                    <button onclick="sendAmen()" class="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-3.5 px-8 rounded-full shadow-lg transition duration-300 ease-in-out hover:scale-105 active:scale-95 text-base w-full sm:w-auto">
+                        <i class="fa-brands fa-whatsapp text-xl"></i>
+                        <span>Kirim "Amen" di WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Tambahan -->
+        <div class="mt-8 text-center">
+            <p class="text-xs text-gray-500">
+                Ayat Alkitab dan renungan disegarkan secara automatik setiap hari pada jam 12:00 tengah malam.
+            </p>
+        </div>
+
+    </main>
+
+    <!-- Kaki Halaman -->
+    <footer class="border-t border-gray-800 bg-spiritual-deep py-6 mt-12">
+        <div class="max-w-4xl mx-auto px-4 text-center space-y-3">
+            <div class="flex justify-center gap-2 text-gold-500 text-sm">
+                <i class="fa-solid fa-cross"></i>
+                <i class="fa-solid fa-dove"></i>
+                <i class="fa-solid fa-book"></i>
+            </div>
+            <p class="text-xs text-gray-500 tracking-wider uppercase font-semibold">
+                Daily Devotion &bull; Disusun oleh Jeff Tony
+            </p>
+            <p class="text-xs text-gray-600 italic">
+                "Firman-Mu itu pelita bagi kakiku dan cahaya bagi jalanku." — Mazmur 119:105
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Pangkalan Data Renungan menggunakan ALKITAB VERSI BORNEO (AVB)
+        const DEVOTION_DATABASE = [
+            {
+                citation: "Yeremia 29:11 (AVB)",
+                text: "Sebab Aku mengetahui rancangan-rancangan-Ku untukmu, rancangan kesejahteraan dan bukan malapetaka, untuk memberi kamu masa depan yang penuh harapan.",
+                godSpeaking: "Anak-Ku yang sangat Kukasihi, janganlah engkau khuatir atau tawar hati dalam masa-masa kesunyian atau ketidakpastian ini. Aku telah melakar setiap hari dalam hidupmu dengan penuh ketelitian. Aku tidak pernah melupakanmu, dan rancangan-Ku untukmu tidak pernah gagal. Setiap cabaran yang engkau lalui sedang Kubentuk menjadi jalan kebaikan untuk membawamu masuk ke dalam masa depan yang indah dan penuh harapan yang telah Kusediakan untukmu.",
+                context: "Nabi Yeremia menulis utusan harapan ini kepada umat Israel yang sedang berada dalam tawanan di Babylon. Mereka merasa ditinggalkan dan putus asa. Namun, Allah menyatakan bahawa walaupun dalam masa pembuangan, rancangan kesejahteraan-Nya tetap berjalan. Ini membuktikan bahawa masa sukar bukanlah penamat, melainkan proses persediaan Tuhan untuk masa depan kita yang gemilang.",
+                prayer: "Bapa di syurga, aku menyerahkan segala kekhuatiran dan rancangan hidupku ke dalam tangan-Mu. Terima kasih kerana Engkau mempunyai rancangan yang indah, penuh damai sejahtera, dan masa depan yang cerah untukku. Berikanlah aku kekuatan untuk terus percaya kepada-Mu walaupun ketika aku belum melihat jalan keluar. Di dalam nama Yesus aku berdoa. Amen."
+            },
+            {
+                citation: "Yesaya 41:10 (AVB)",
+                text: "Janganlah takut, kerana Aku menyertai kamu. Janganlah cemas, kerana Aku ini Allahmu. Aku akan menguatkan kamu, bahkan Aku akan menolong kamu. Aku akan memegang kamu dengan tangan kanan-Ku yang membawa kemenangan.",
+                godSpeaking: "Anak-Ku, lepaskanlah segala beban ketakutan yang menyesakkan dadamu hari ini. Engkau tidak sedang berjalan sendirian. Aku berdiri tepat di sampingmu. Aku adalah Allahmu yang berkuasa. Di saat lututmu terasa lemah dan jiwamu lelah, Aku akan mengalirkan kekuatan baru dalam rohmu. Peganglah tangan-Ku, kerana tangan kanan-Ku yang membawa kemenangan sedang memeluk erat hidupmu.",
+                context: "Tuhan menyampaikan firman ini melalui nabi Yesaya kepada umat-Nya yang diselubungi ketakutan di tengah-tengah pergolakan bangsa-bangsa lain yang menyembah berhala. Ketika bangsa lain bergantung kepada patung buatan manusia, Tuhan mengingatkan umat-Nya bahawa Dia adalah Allah yang hidup, yang sentiasa hadir secara peribadi untuk memegang dan menyelamatkan mereka.",
+                prayer: "Tuhan Yesus, ketika badai kehidupan datang melanda jiwaku, ingatkanlah aku akan kehadiran-Mu yang nyata. Tolonglah aku untuk tidak cemas atau takut, tetapi bersandar sepenuhnya kepada kekuatan-Mu. Terima kasih kerana Engkau sentiasa sedia menolong dan memegang hidupku dengan tangan kemenangan-Mu. Amen."
+            },
+            {
+                citation: "Yosua 1:9 (AVB)",
+                text: "Bukankah telah Kuperintahkan kepadamu: Kuatkanlah dan teguhkanlah hatimu! Janganlah kecut dan janganlah tawar hati, kerana TUHAN, Allahmu, menyertai kamu ke mana-mana jua kamu pergi.",
+                godSpeaking: "Anak-Ku, pandanglah ke hadapan dengan penuh keberanian. Jangan biarkan keraguan melumpuhkan langkahmu. Aku telah berjalan di depanmu untuk meratakan jalan yang bengkang-bengkok. Keberanianmu tidak bergantung kepada kekuatan dirimu sendiri, tetapi kepada janji penyertaan-Ku yang setia. Melangkah lah dengan yakin hari ini, kerana ke mana sahaja engkau pergi, Aku ada di sana.",
+                context: "Yosua memikul tanggungjawab yang amat besar untuk memimpin jutaan orang Israel memasuki Tanah Perjanjian selepas kematian Musa. Dia berhadapan dengan kota-kota berkubu kuat dan musuh yang besar. Tuhan memberikan pesanan utama: bukan strategi perang, melainkan perintah rohani untuk menguatkan hati yang bersumberkan penyertaan Tuhan secara mutlak.",
+                prayer: "Bapa, berikanlah aku hati yang teguh dan berani hari ini untuk menghadapi setiap cabaran di tempat kerja, keluarga, dan pelayananku. Singkirkanlah rasa gentar dan tawar hati daripada fikiranku. Aku bersyukur kerana tahu bahawa Engkau sentiasa menyertai aku ke mana-mana jua aku pergi. Amen."
+            },
+            {
+                citation: "Amsal 3:5-6 (AVB)",
+                text: "Percayalah kepada TUHAN dengan segenap hatimu, dan jangan bersandar kepada pengertianmu sendiri. Dalam segala jalanmu akuilah Dia, maka Dia akan meluruskan jalanmu.",
+                godSpeaking: "Anak-Ku, hentikanlah usaha melelahkan untuk memahami segala sesuatu dengan kekuatan fikiranmu yang terbatas. Bawa setiap rancangan, keputusan, dan kebimbanganmu kepada-Ku. Serahkanlah kemudi hidupmu ke dalam tangan-Ku. Apabila engkau mengutamakan Aku dan mengakui kedaulatan-Ku dalam setiap langkahmu, Aku akan meratakan setiap jalan yang berliku dan mempermudahkan langkahmu.",
+                context: "Amsal ini ditulis oleh Raja Salomo untuk menekankan perbezaan antara hikmat manusia dan hikmat ilahi. Bersandar pada pengertian sendiri digambarkan seperti bertumpu pada tongkat yang rapuh. Hikmat sejati adalah meletakkan seluruh berat hidup kita kepada watak dan kesetiaan Tuhan yang tidak pernah berubah.",
+                prayer: "Tuhan yang bijaksana, aku mengaku bahawa aku sering cuba menyelesaikan masalahku dengan logik fikiran sendiri. Hari ini, aku memilih untuk tunduk dan menyerahkan segala jalanku kepada-Mu. Pimpinlah langkahku, luruskanlah jalanku yang bengkok, dan berikanlah aku damai sejahtera-Mu yang melampaui segala akal. Amen."
+            },
+            {
+                citation: "Matius 11:28 (AVB)",
+                text: "Marilah kepada-Ku, semua yang letih lesu dan memikul beban berat, dan Aku akan memberi kelegaan kepadamu.",
+                godSpeaking: "Mari mendekat kepada-Ku, anak-Ku. Aku melihat betapa lelahnya engkau memikul beban kehidupan, harapan orang lain, serta kebimbangan hari esok yang menekan jiwamu. Engkau tidak dicipta untuk memikul semua ini sendirian. Letakkanlah semua beban itu di bawah kaki salib-Ku. Ambilah kelegaan dan kedamaian yang Kupersiapkan khas untukmu hari ini. Rehatlah di dalam pelukan-Ku.",
+                context: "Pada zaman Yesus, para pemimpin agama meletakkan beban tradisi hukum Taurat yang sangat berat dan mustahil untuk dipikul oleh rakyat biasa. Yesus datang membawa revolusi kasih karunia dengan menawarkan 'kuk' yang ringan, di mana hubungan dengan Allah tidak lagi menjadi beban rohani yang melelahkan tetapi menjadi sumber kelegaan dan rehat yang sejati.",
+                prayer: "Ya Yesus, aku datang kepada-Mu hari ini dengan membawa segala keletihan dan beban berat dalam hidupku. Aku menyerahkan masalah keluarga, kesihatan, dan kewanganku ke dalam tangan-Mu. Penuhilah hatiku dengan kelegaan dan ketenangan yang datang daripada-Mu. Terima kasih kerana Engkau adalah tempat perlindunganku yang aman. Amen."
+            },
+            {
+                citation: "Roma 8:28 (AVB)",
+                text: "Kita tahu bahawa dalam segala hal Allah bekerja mendatangkan kebaikan bagi mereka yang mengasihi Dia, iaitu mereka yang dipanggil menurut rancangan-Nya.",
+                godSpeaking: "Anak-Ku, janganlah engkau menilai kasih-Ku berdasarkan keadaan sekelilingmu yang kelihatan kacau-bilau pada saat ini. Aku adalah Pencipta yang Agung. Aku sedang menyusun setiap kepingan hidupmu—baik suka mahupun duka, kemenangan mahupun air mata—menjadi sebuah gambaran akhir yang indah untuk kebaikanmu. Tiada satu pun butir air matamu yang sia-sia di mata-Ku.",
+                context: "Rasul Paulus menulis surat ini kepada jemaat di Roma yang sedang menghadapi penganiayaan dan penderitaan yang hebat. Ayat ini bukanlah janji murah bahawa tiada perkara buruk akan berlaku, melainkan jaminan kukuh bahawa kedaulatan Allah sangat besar sehingga Dia mampu mengubah penderitaan yang paling gelap menjadi alat pembentukan iman yang indah.",
+                prayer: "Bapa Surgawi, terima kasih kerana Engkau sentiasa bekerja dalam segala aspek hidupku untuk mendatangkan kebaikan. Walaupun aku tidak memahami mengapa sesuatu perkara sukar harus terjadi, aku memilih untuk percaya kepada kasih-Mu yang sempurna. Bentuklah hidupku mengikut kehendak-Mu. Amen."
+            },
+            {
+                citation: "Mazmur 23:4 (AVB)",
+                text: "Sungkupun aku berjalan melalui lembah bayang-bayang maut, aku tidak akan takut kepada malapetaka, kerana Engkau menyertai aku; belada-Mu dan tongkat-Mu memberikan penghiburan kepadaku.",
+                godSpeaking: "Anak-Ku, janganlah takut apabila kegelapan seolah-olah mengepung jalanmu. Lembah yang sedang engkau lalui ini bukanlah destinasi akhirmu; engkau hanya sedang berjalan melaluinya bersama-Ku. Aku tidak pernah meninggalkanmu di dalam kegelapan. Gada-Ku sedia melindungi dirimu daripada serangan musuh, dan tongkat-Ku akan membimbing setiap langkahmu agar tidak tersasar. Engkau selamat di bawah jagaan-Ku.",
+                context: "Raja Daud, yang berpengalaman melarikan diri di padang belantara yang berbahaya, menggunakan metafora gembala yang membimbing dombanya melalui jurang yang gelap untuk pergi ke padang rumput yang subur. Kedamaian domba tidak bergantung kepada keadaan jurang itu, melainkan kepada jaraknya dengan si gembala yang membawa gada (perlindungan) dan tongkat (bimbingan).",
+                prayer: "Ya TUHAN, Engkaulah Gembalaku yang baik. Terima kasih kerana sentiasa berjalan bersamaku di saat-saat yang paling sukar dan sunyi dalam hidupku. Biarlah firman-Mu meneguhkan hatiku dan bimbingan-Mu menuntun setiap langkahku mengatasi segala ketakutan. Di dalam nama-Mu yang kudus, aku berdoa. Amen."
+            }
+        ];
+
+        let currentDevotion = {};
+
+        // Mendapatkan nombor hari dalam tahun untuk putaran automatik setiap hari
+        function getDayOfYear() {
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 0);
+            const diff = now - start;
+            const oneDay = 1000 * 60 * 60 * 24;
+            return Math.floor(diff / oneDay);
+        }
+
+        // Paparkan renungan harian berdasarkan hari
+        function loadDailyDevotion() {
+            const today = new Date();
+            
+            // Format tarikh dalam Bahasa Malaysia
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const rawDateStr = today.toLocaleDateString('ms-MY', options);
+            
+            // Cantikkan paparan tarikh
+            document.getElementById('devotion-date').innerText = rawDateStr;
+
+            // Pilih ayat daripada pangkalan data secara berputar
+            const dayIndex = getDayOfYear() % DEVOTION_DATABASE.length;
+            currentDevotion = DEVOTION_DATABASE[dayIndex];
+
+            // Masukkan data ke dalam elemen HTML
+            document.getElementById('verse-text').innerText = currentDevotion.text;
+            document.getElementById('verse-citation').innerText = "— " + currentDevotion.citation;
+            document.getElementById('personal-voice').innerText = currentDevotion.godSpeaking;
+            document.getElementById('context-impact').innerText = currentDevotion.context;
+            document.getElementById('daily-prayer').innerText = currentDevotion.prayer;
+        }
+
+        // Hantar mesej pengesahan Amen ke WhatsApp Jeff Tony
+        function sendAmen() {
+            const formattedDate = document.getElementById('devotion-date').innerText;
+            const message = `Amen! 🙏 Saya telah membaca Renungan Harian (${formattedDate}) oleh Brother Jeff Tony.\n\n📖 Firman Hari Ini: "${currentDevotion.text}" (${currentDevotion.citation})\n\nRenungan ini sangat memberkati jiwa saya hari ini. Terima kasih, Brother Jeff!`;
+            
+            const encodedText = encodeURIComponent(message);
+            const phoneNumber = "60128887738"; // Nombor WhatsApp Jeff Tony
+            
+            window.open(`https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedText}`, '_blank');
+        }
+
+        // Fungsi muat turun fail HTML untuk krew
+        function downloadSelf() {
+            let htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Renungan_Harian_AVB_Jeff_Tony_${new Date().toISOString().split('T')[0]}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Jalankan sistem sebaik sahaja halaman dimuatkan
+        window.onload = function() {
+            loadDailyDevotion();
+        };
+    </script>
+</body>
+</html>
+
+```
